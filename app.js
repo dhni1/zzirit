@@ -46,7 +46,7 @@ const elements = {
     rBody: document.querySelector("#graphRBody"),
     rGround: document.querySelector("#graphRGround"),
   },
-  pixelMacBook: document.querySelector("#pixelMacBook"),
+  titleMacBook: document.querySelector("#titleMacBook"),
 };
 
 function logValue(slider) {
@@ -359,8 +359,8 @@ function drawAxisLabels(ctx, config, pad, plotW, plotH, yMax) {
   ctx.fillText(config.xName, pad.left + plotW, 13);
 }
 
-function drawPixelMacBook() {
-  const canvas = elements.pixelMacBook;
+function drawTitleMacBook() {
+  const canvas = elements.titleMacBook;
   const ctx = canvas.getContext("2d");
   ctx.imageSmoothingEnabled = false;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -370,26 +370,74 @@ function drawPixelMacBook() {
     ctx.fillRect(x, y, w, h);
   };
 
-  p(24, 8, 112, 8, COLORS.ink);
-  p(16, 16, 128, 8, COLORS.ink);
-  p(16, 24, 8, 48, COLORS.ink);
-  p(136, 24, 8, 48, COLORS.ink);
-  p(24, 72, 112, 8, COLORS.ink);
-  p(24, 16, 112, 56, "#d9dce5");
-  p(32, 24, 96, 40, "#20252a");
-  p(40, 32, 80, 24, "#6fbf83");
-  p(40, 32, 8, 24, "#94d89f");
-  p(112, 32, 8, 24, "#3f8b52");
-  p(64, 34, 24, 20, "#f5f5f1");
-  p(88, 42, 8, 8, "#f5f5f1");
+  p(118, 52, 404, 236, "rgba(0,0,0,0.08)");
 
-  p(8, 80, 144, 8, COLORS.ink);
-  p(16, 88, 128, 8, "#c9cbd8");
-  p(32, 96, 96, 8, COLORS.ink);
-  p(56, 88, 48, 4, "#f2f3f7");
-  p(64, 92, 32, 4, "#a9adc0");
-  p(16, 88, 16, 8, "#e5e7ef");
-  p(128, 88, 16, 8, "#8f93aa");
+  p(132, 42, 376, 14, "#111315");
+  p(124, 56, 392, 12, "#22252a");
+  p(118, 68, 12, 206, "#16181c");
+  p(510, 68, 12, 206, "#16181c");
+  p(124, 274, 392, 14, "#111315");
+  p(132, 56, 376, 218, "#0f1114");
+  p(142, 68, 356, 194, "#1c2026");
+
+  for (let y = 74; y < 256; y += 14) {
+    const t = (y - 74) / 182;
+    const base = Math.round(130 + t * 70);
+    p(150, y, 340, 14, `rgb(${base}, ${72 + Math.round(t * 40)}, ${220 - Math.round(t * 15)})`);
+  }
+
+  for (let i = 0; i < 13; i += 1) {
+    p(150 + i * 26, 74 + i * 11, 92, 14, "#d84db0");
+    p(230 + i * 18, 74 + i * 14, 150, 14, "#d99ce1");
+    p(322 + i * 15, 86 + i * 12, 130, 14, "#b184e8");
+  }
+
+  p(312, 74, 86, 14, "#dcc6f1");
+  p(268, 88, 120, 20, "#d4b8f0");
+  p(256, 108, 146, 20, "#d5a8e9");
+  p(290, 128, 132, 20, "#d998dd");
+  p(322, 148, 110, 20, "#d17ddd");
+  p(350, 168, 74, 18, "#d98ad9");
+  p(142, 68, 356, 8, "#2c3036");
+  p(316, 56, 8, 8, "#555961");
+
+  p(198, 224, 244, 36, "rgba(225, 210, 255, 0.55)");
+  const dockX = [214, 248, 282, 318, 354, 390];
+  const dockColors = ["#4aa6e8", "#ece8e0", "#52c95f", "#70b7ec", "#e93b3b", "#d9dbe5"];
+  dockX.forEach((x, index) => {
+    p(x, 232, 24, 22, dockColors[index]);
+    p(x + 4, 236, 16, 14, "#ffffff");
+  });
+  p(220, 242, 14, 4, "#1b5d95");
+  p(253, 236, 6, 6, "#f2a83a");
+  p(263, 236, 6, 6, "#e05b83");
+  p(253, 246, 6, 6, "#7ac6dc");
+  p(263, 246, 6, 6, "#67bd71");
+  p(289, 238, 18, 10, "#ffffff");
+  p(325, 240, 16, 8, "#ffffff");
+  p(362, 236, 8, 16, "#ffffff");
+  p(397, 236, 16, 16, "#a4a8b8");
+
+  p(110, 286, 420, 10, "#9ea3ad");
+  p(98, 296, 444, 14, "#d0d3db");
+  p(86, 310, 468, 26, "#bec2cc");
+  p(74, 336, 492, 20, "#d8dbe2");
+  p(62, 356, 516, 18, "#b8bcc7");
+  p(66, 374, 508, 10, "#777b86");
+
+  p(132, 304, 376, 8, "#5f646e");
+  for (let row = 0; row < 4; row += 1) {
+    for (let col = 0; col < 18; col += 1) {
+      const x = 140 + col * 20 + (row % 2) * 5;
+      const y = 316 + row * 10;
+      const shade = (row + col) % 3 === 0 ? "#181a1e" : "#33373e";
+      p(x, y, 14, 6, shade);
+      p(x + 1, y, 4, 2, "#666b75");
+    }
+  }
+  p(244, 336, 152, 30, "#a9adb7");
+  p(248, 336, 144, 6, "#bfc2cb");
+  p(292, 370, 56, 5, "#f0f1f4");
 }
 
 function update() {
@@ -420,5 +468,5 @@ document.querySelectorAll("[data-ground]").forEach((button) => {
 
 window.addEventListener("resize", update);
 
-drawPixelMacBook();
+drawTitleMacBook();
 update();
