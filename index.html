@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="충전 중 금속 노트북의 유도전압, 인체저항, 누설저항, 접지저항에 따른 접촉전류 시뮬레이션"
+    />
+    <title>접촉전류 시뮬레이터</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div class="brand">
+          <canvas id="pixelBattery" width="144" height="104" aria-hidden="true"></canvas>
+          <div>
+            <p class="eyebrow">미접지 전기기기 유도전압 모델</p>
+            <h1>금속 노트북 접촉전류 계산기</h1>
+          </div>
+        </div>
+        <div class="main-readout" aria-live="polite">
+          <span class="readout-label">Ibody</span>
+          <strong id="mainCurrent">0.000 mA</strong>
+          <span id="riskBadge" class="risk-badge">계산 중</span>
+        </div>
+      </header>
+
+      <section class="workspace" aria-label="접촉전류 시뮬레이터">
+        <aside class="control-panel">
+          <div class="panel-title">
+            <span class="pixel-dot"></span>
+            <h2>조건 입력</h2>
+          </div>
+
+          <div class="control-group">
+            <label for="v0">
+              <span>유도전압 V0</span>
+              <output id="v0Value">120 V</output>
+            </label>
+            <input id="v0" type="range" min="89" max="151" step="1" value="120" />
+          </div>
+
+          <div class="control-group">
+            <label for="rLeak">
+              <span>누설 경로 저항 Rleak</span>
+              <output id="rLeakValue">500 kΩ</output>
+            </label>
+            <input id="rLeak" type="range" min="4" max="6.69897" step="0.001" value="5.69897" />
+          </div>
+
+          <div class="control-group">
+            <label for="rBody">
+              <span>인체 저항 Rbody</span>
+              <output id="rBodyValue">10 kΩ</output>
+            </label>
+            <input id="rBody" type="range" min="3" max="5.30103" step="0.001" value="4" />
+            <div class="quick-row" aria-label="인체 저항 빠른 선택">
+              <button type="button" data-body="1000">젖은 손</button>
+              <button type="button" data-body="10000">보통</button>
+              <button type="button" data-body="100000">건조</button>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label for="rGround">
+              <span>접지 저항 Rg</span>
+              <output id="rGroundValue">10 MΩ</output>
+            </label>
+            <input id="rGround" type="range" min="-1" max="7" step="0.001" value="7" />
+            <div class="quick-row" aria-label="접지 저항 빠른 선택">
+              <button type="button" data-ground="1">좋음</button>
+              <button type="button" data-ground="10">보통</button>
+              <button type="button" data-ground="100">나쁨</button>
+              <button type="button" data-ground="10000000">미접지</button>
+            </div>
+          </div>
+
+          <div class="meter-grid">
+            <div>
+              <span>Vtouch</span>
+              <strong id="touchVoltage">0.000 V</strong>
+            </div>
+            <div>
+              <span>감소율</span>
+              <strong id="reduction">0.0%</strong>
+            </div>
+            <div>
+              <span>Req</span>
+              <strong id="equivalentResistance">0 Ω</strong>
+            </div>
+            <div>
+              <span>상태</span>
+              <strong id="riskText">-</strong>
+            </div>
+          </div>
+
+          <p class="safety-note">
+            실제 충전기, 콘센트, 노트북 외함을 분해하거나 접촉 전류를 직접 측정하지 않는다.
+          </p>
+        </aside>
+
+        <section class="graph-board" aria-label="조건별 접촉전류 그래프">
+          <article class="graph-card">
+            <header>
+              <h2>V0 변화</h2>
+              <span id="v0GraphValue">-</span>
+            </header>
+            <canvas id="graphV0"></canvas>
+          </article>
+
+          <article class="graph-card">
+            <header>
+              <h2>Rleak 변화</h2>
+              <span id="rLeakGraphValue">-</span>
+            </header>
+            <canvas id="graphRLeak"></canvas>
+          </article>
+
+          <article class="graph-card">
+            <header>
+              <h2>Rbody 변화</h2>
+              <span id="rBodyGraphValue">-</span>
+            </header>
+            <canvas id="graphRBody"></canvas>
+          </article>
+
+          <article class="graph-card">
+            <header>
+              <h2>Rg 변화</h2>
+              <span id="rGroundGraphValue">-</span>
+            </header>
+            <canvas id="graphRGround"></canvas>
+          </article>
+        </section>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
