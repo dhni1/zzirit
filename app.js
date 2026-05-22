@@ -46,7 +46,7 @@ const elements = {
     rBody: document.querySelector("#graphRBody"),
     rGround: document.querySelector("#graphRGround"),
   },
-  pixelBattery: document.querySelector("#pixelBattery"),
+  pixelMacBook: document.querySelector("#pixelMacBook"),
 };
 
 function logValue(slider) {
@@ -105,6 +105,16 @@ function formatOhm(value) {
     return `${trimNumber(value / 1_000)} kΩ`;
   }
   return `${trimNumber(value)} Ω`;
+}
+
+function formatOhmAxis(value) {
+  if (value >= 1_000_000) {
+    return `${trimNumber(value / 1_000_000)}MΩ`;
+  }
+  if (value >= 1_000) {
+    return `${trimNumber(value / 1_000)}kΩ`;
+  }
+  return `${trimNumber(value)}Ω`;
 }
 
 function formatCurrent(value) {
@@ -169,6 +179,7 @@ function graphConfigs(state) {
       unit: "V",
       currentX: state.v0,
       formatX: (value) => `${value.toFixed(0)} V`,
+      axisX: (value) => `${value.toFixed(0)}V`,
     },
     {
       key: "rLeak",
@@ -181,6 +192,7 @@ function graphConfigs(state) {
       unit: "Ω",
       currentX: state.rLeak,
       formatX: formatOhm,
+      axisX: formatOhmAxis,
     },
     {
       key: "rBody",
@@ -193,6 +205,7 @@ function graphConfigs(state) {
       unit: "Ω",
       currentX: state.rBody,
       formatX: formatOhm,
+      axisX: formatOhmAxis,
     },
     {
       key: "rGround",
@@ -205,6 +218,7 @@ function graphConfigs(state) {
       unit: "Ω",
       currentX: state.rGround,
       formatX: formatOhm,
+      axisX: formatOhmAxis,
     },
   ];
 }
@@ -222,7 +236,7 @@ function drawGraph(config, state) {
 
   const width = rect.width;
   const height = rect.height;
-  const pad = { left: 48, right: 16, top: 16, bottom: 34 };
+  const pad = { left: 58, right: 58, top: 28, bottom: 48 };
   const plotW = width - pad.left - pad.right;
   const plotH = height - pad.top - pad.bottom;
 
@@ -330,22 +344,23 @@ function drawGrid(ctx, pad, plotW, plotH, yMax) {
 function drawAxisLabels(ctx, config, pad, plotW, plotH, yMax) {
   ctx.font = "12px Courier New, monospace";
   ctx.fillStyle = COLORS.ink;
-  ctx.textBaseline = "top";
+  ctx.textBaseline = "middle";
   ctx.textAlign = "left";
-  ctx.fillText("mA", 8, 8);
+  ctx.fillText("Ibody(mA)", pad.left, 13);
 
   ctx.textBaseline = "top";
-  ctx.textAlign = "center";
-  ctx.fillText(config.formatX(config.min), pad.left, pad.top + plotH + 12);
-  ctx.fillText(config.formatX(config.max), pad.left + plotW, pad.top + plotH + 12);
+  ctx.textAlign = "left";
+  ctx.fillText(config.axisX(config.min), pad.left, pad.top + plotH + 14);
+  ctx.textAlign = "right";
+  ctx.fillText(config.axisX(config.max), pad.left + plotW, pad.top + plotH + 14);
 
   ctx.textAlign = "right";
   ctx.fillStyle = COLORS.blue;
-  ctx.fillText(config.xName, pad.left + plotW, 8);
+  ctx.fillText(config.xName, pad.left + plotW, 13);
 }
 
-function drawPixelBattery() {
-  const canvas = elements.pixelBattery;
+function drawPixelMacBook() {
+  const canvas = elements.pixelMacBook;
   const ctx = canvas.getContext("2d");
   ctx.imageSmoothingEnabled = false;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -355,36 +370,26 @@ function drawPixelBattery() {
     ctx.fillRect(x, y, w, h);
   };
 
-  p(28, 0, 88, 8, COLORS.ink);
-  p(20, 8, 104, 8, COLORS.ink);
-  p(12, 16, 120, 8, COLORS.ink);
-  p(4, 32, 136, 56, COLORS.ink);
-  p(12, 24, 120, 64, COLORS.lavender);
-  p(20, 16, 104, 8, "#b5e2b7");
-  p(20, 24, 104, 48, COLORS.green);
-  p(20, 72, 104, 8, COLORS.greenDark);
-  p(20, 80, 104, 8, "#dfe0ff");
-  p(28, 88, 88, 8, COLORS.lavender);
-  p(36, 96, 72, 8, COLORS.ink);
-  p(12, 80, 8, 8, COLORS.ink);
-  p(124, 80, 8, 8, COLORS.ink);
-  p(20, 88, 8, 8, COLORS.ink);
-  p(116, 88, 8, 8, COLORS.ink);
-  p(20, 16, 104, 4, "#a6dca8");
-  p(20, 68, 104, 4, "#97d99c");
-  p(12, 40, 8, 40, "#e8e7ff");
-  p(124, 40, 8, 40, "#e8e7ff");
-  p(12, 80, 8, 8, "#9297c1");
-  p(124, 80, 8, 8, "#9297c1");
+  p(24, 8, 112, 8, COLORS.ink);
+  p(16, 16, 128, 8, COLORS.ink);
+  p(16, 24, 8, 48, COLORS.ink);
+  p(136, 24, 8, 48, COLORS.ink);
+  p(24, 72, 112, 8, COLORS.ink);
+  p(24, 16, 112, 56, "#d9dce5");
+  p(32, 24, 96, 40, "#20252a");
+  p(40, 32, 80, 24, "#6fbf83");
+  p(40, 32, 8, 24, "#94d89f");
+  p(112, 32, 8, 24, "#3f8b52");
+  p(64, 34, 24, 20, "#f5f5f1");
+  p(88, 42, 8, 8, "#f5f5f1");
 
-  p(64, 28, 8, 32, "#ffffff");
-  p(72, 36, 8, 24, "#ffffff");
-  p(80, 44, 8, 16, "#ffffff");
-  p(88, 52, 8, 8, "#ffffff");
-  p(56, 36, 8, 32, "#ffffff");
-  p(64, 68, 8, 8, "#4e9257");
-  p(72, 60, 8, 8, "#4e9257");
-  p(80, 52, 8, 8, "#4e9257");
+  p(8, 80, 144, 8, COLORS.ink);
+  p(16, 88, 128, 8, "#c9cbd8");
+  p(32, 96, 96, 8, COLORS.ink);
+  p(56, 88, 48, 4, "#f2f3f7");
+  p(64, 92, 32, 4, "#a9adc0");
+  p(16, 88, 16, 8, "#e5e7ef");
+  p(128, 88, 16, 8, "#8f93aa");
 }
 
 function update() {
@@ -415,5 +420,5 @@ document.querySelectorAll("[data-ground]").forEach((button) => {
 
 window.addEventListener("resize", update);
 
-drawPixelBattery();
+drawPixelMacBook();
 update();
