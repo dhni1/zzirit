@@ -40,13 +40,13 @@ const elements = {
     rBody: document.querySelector("#rBodyGraphValue"),
     rGround: document.querySelector("#rGroundGraphValue"),
   },
+  titleImage: document.querySelector(".title-image"),
   graphs: {
     v0: document.querySelector("#graphV0"),
     rLeak: document.querySelector("#graphRLeak"),
     rBody: document.querySelector("#graphRBody"),
     rGround: document.querySelector("#graphRGround"),
   },
-  titleMacBook: document.querySelector("#titleMacBook"),
 };
 
 function logValue(slider) {
@@ -359,65 +359,6 @@ function drawAxisLabels(ctx, config, pad, plotW, plotH, yMax) {
   ctx.fillText(config.xName, pad.left + plotW, 13);
 }
 
-function drawTitleMacBook() {
-  const canvas = elements.titleMacBook;
-  const ctx = canvas.getContext("2d");
-  ctx.imageSmoothingEnabled = false;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  const p = (x, y, w, h, color) => {
-    ctx.fillStyle = color;
-    ctx.fillRect(x, y, w, h);
-  };
-
-  p(20, 8, 136, 6, "#121417");
-  p(16, 14, 144, 6, "#24282e");
-  p(14, 20, 6, 60, "#121417");
-  p(156, 20, 6, 60, "#121417");
-  p(20, 80, 136, 6, "#121417");
-  p(22, 20, 132, 60, "#0f1114");
-  p(28, 28, 120, 44, "#7d53de");
-
-  p(28, 28, 120, 10, "#df58b4");
-  p(28, 38, 120, 12, "#b24bd2");
-  p(28, 50, 120, 12, "#8d48d9");
-  p(28, 62, 120, 10, "#7038c9");
-  p(72, 28, 28, 8, "#d8c6ef");
-  p(66, 36, 44, 8, "#d1aee9");
-  p(76, 44, 48, 8, "#d98dde");
-  p(94, 52, 42, 8, "#be7be1");
-  p(112, 60, 26, 8, "#a26adf");
-
-  p(50, 64, 76, 8, "rgba(229, 214, 255, 0.55)");
-  const icons = [
-    [56, "#3aa2e9"],
-    [72, "#f2efe8"],
-    [88, "#42c95b"],
-    [104, "#62bde8"],
-    [120, "#e83b35"],
-  ];
-  icons.forEach(([x, color]) => {
-    p(x, 66, 10, 10, color);
-    p(x + 3, 69, 4, 4, "#ffffff");
-  });
-
-  p(10, 86, 156, 6, "#a6abb6");
-  p(4, 92, 168, 10, "#d0d3dc");
-  p(0, 102, 176, 6, "#b9bec9");
-  p(16, 108, 144, 4, "#737985");
-  p(28, 94, 120, 4, "#5e646f");
-
-  for (let row = 0; row < 3; row += 1) {
-    for (let col = 0; col < 13; col += 1) {
-      const x = 34 + col * 8 + (row % 2) * 3;
-      const y = 98 + row * 4;
-      p(x, y, 5, 2, (row + col) % 3 === 0 ? "#1b1e23" : "#3c414b");
-    }
-  }
-  p(68, 100, 40, 8, "#acb0bb");
-  p(72, 108, 32, 2, "#eef0f4");
-}
-
 function update() {
   const state = readState();
   const result = calculate(state);
@@ -425,6 +366,19 @@ function update() {
   for (const config of graphConfigs(state)) {
     drawGraph(config, state);
   }
+}
+
+function preferPngTitleImage() {
+  const pngSrc = elements.titleImage?.dataset.pngSrc;
+  if (!pngSrc) {
+    return;
+  }
+
+  const probe = new Image();
+  probe.onload = () => {
+    elements.titleImage.src = pngSrc;
+  };
+  probe.src = pngSrc;
 }
 
 function setLogSlider(slider, value) {
@@ -446,5 +400,5 @@ document.querySelectorAll("[data-ground]").forEach((button) => {
 
 window.addEventListener("resize", update);
 
-drawTitleMacBook();
+preferPngTitleImage();
 update();

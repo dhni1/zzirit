@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="176" height="112" viewBox="0 0 176 112" role="img" aria-label="pixel macbook">
+  <g shape-rendering="crispEdges">
+    <rect x="24" y="6" width="128" height="4" fill="#101214"/>
+    <rect x="20" y="10" width="136" height="4" fill="#101214"/>
+    <rect x="18" y="14" width="4" height="64" fill="#101214"/>
+    <rect x="154" y="14" width="4" height="64" fill="#101214"/>
+    <rect x="20" y="78" width="136" height="4" fill="#101214"/>
+    <rect x="24" y="82" width="128" height="4" fill="#101214"/>
+
+    <rect x="22" y="14" width="132" height="64" fill="#24272d"/>
+    <rect x="26" y="18" width="124" height="56" fill="#0f1115"/>
+    <rect x="30" y="22" width="116" height="48" fill="#744ed8"/>
+
+    <rect x="30" y="22" width="116" height="9" fill="#e45cad"/>
+    <rect x="30" y="31" width="116" height="10" fill="#bc4fd0"/>
+    <rect x="30" y="41" width="116" height="12" fill="#9650dc"/>
+    <rect x="30" y="53" width="116" height="17" fill="#6740c7"/>
+
+    <rect x="70" y="22" width="44" height="5" fill="#ddc7f0"/>
+    <rect x="64" y="27" width="56" height="6" fill="#d5b2ed"/>
+    <rect x="70" y="33" width="54" height="6" fill="#d99fe7"/>
+    <rect x="78" y="39" width="46" height="6" fill="#d98cde"/>
+    <rect x="86" y="45" width="38" height="6" fill="#d77edb"/>
+    <rect x="94" y="51" width="28" height="6" fill="#c976dd"/>
+
+    <rect x="48" y="60" width="80" height="10" fill="#cab8ef" opacity=".65"/>
+    <rect x="56" y="62" width="8" height="8" fill="#3aa4e8"/>
+    <rect x="70" y="62" width="8" height="8" fill="#f0ece6"/>
+    <rect x="84" y="62" width="8" height="8" fill="#4fc763"/>
+    <rect x="98" y="62" width="8" height="8" fill="#66b8e8"/>
+    <rect x="112" y="62" width="8" height="8" fill="#e9463a"/>
+
+    <rect x="82" y="10" width="8" height="4" fill="#565b66"/>
+    <rect x="22" y="74" width="132" height="4" fill="#343841"/>
+
+    <rect x="16" y="86" width="144" height="6" fill="#9da4af"/>
+    <rect x="10" y="92" width="156" height="8" fill="#c7ccd6"/>
+    <rect x="4" y="100" width="168" height="8" fill="#d7dbe3"/>
+    <rect x="8" y="108" width="160" height="4" fill="#707682"/>
+
+    <rect x="30" y="90" width="116" height="4" fill="#606773"/>
+    <rect x="34" y="96" width="108" height="3" fill="#2a2e35"/>
+    <rect x="38" y="101" width="100" height="3" fill="#252a31"/>
+    <rect x="46" y="96" width="10" height="3" fill="#555b66"/>
+    <rect x="72" y="96" width="10" height="3" fill="#555b66"/>
+    <rect x="98" y="96" width="10" height="3" fill="#555b66"/>
+    <rect x="124" y="96" width="10" height="3" fill="#555b66"/>
+    <rect x="64" y="100" width="48" height="8" fill="#aeb3be"/>
+    <rect x="72" y="106" width="32" height="2" fill="#f0f2f5"/>
+  </g>
+</svg>

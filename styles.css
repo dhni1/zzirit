@@ -71,11 +71,12 @@ input {
   padding: 12px 18px 12px 12px;
 }
 
-#titleMacBook {
+.title-image {
   flex: 0 0 auto;
   display: block;
   width: 176px;
   height: 112px;
+  object-fit: contain;
   image-rendering: pixelated;
   margin-right: 16px;
 }
@@ -372,7 +373,7 @@ input[type="range"]::-moz-range-thumb {
     padding: 10px;
   }
 
-  #titleMacBook {
+  .title-image {
     width: 112px;
     height: 72px;
     margin-right: 10px;
