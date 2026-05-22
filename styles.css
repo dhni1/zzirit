@@ -65,20 +65,19 @@ input {
 }
 
 .brand {
-  display: grid;
-  grid-template-columns: minmax(260px, 420px) minmax(0, 1fr);
-  gap: 18px;
+  display: flex;
   align-items: center;
   min-width: 0;
-  padding: 14px 20px 16px 14px;
+  padding: 12px 18px 12px 12px;
 }
 
 #titleMacBook {
+  flex: 0 0 auto;
   display: block;
-  width: min(420px, 100%);
-  height: auto;
+  width: 176px;
+  height: 112px;
   image-rendering: pixelated;
-  justify-self: center;
+  margin-right: 16px;
 }
 
 .brand-copy {
@@ -369,15 +368,14 @@ input[type="range"]::-moz-range-thumb {
   }
 
   .brand {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 8px;
+    display: flex;
     padding: 10px;
   }
 
   #titleMacBook {
-    width: min(100%, 310px);
-    justify-self: start;
+    width: 112px;
+    height: 72px;
+    margin-right: 10px;
   }
 
   h1 {
