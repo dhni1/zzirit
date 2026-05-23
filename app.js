@@ -440,114 +440,352 @@ function drawSimulation(state, result, time = 0) {
 
   const ctx = canvas.getContext("2d");
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctx.imageSmoothingEnabled = false;
+  ctx.imageSmoothingEnabled = true;
 
   const width = rect.width;
   const height = rect.height;
-  const floorY = height - 62;
   const riskColor = result.risk.color;
   const bodyIntensity = clamp(result.currentMa / 5, 0, 1);
   const groundIntensity = clamp(result.groundShare / 100, 0, 1);
   const leakIntensity = clamp(result.leakCurrentMa / 5, 0, 1);
 
   ctx.clearRect(0, 0, width, height);
-  drawSimulationBackground(ctx, width, height, floorY);
+  drawSimulationBackground(ctx, width, height);
 
-  const laptopW = clamp(width * 0.28, 126, 238);
-  const laptopH = clamp(laptopW * 0.34, 46, 76);
-  const laptop = {
-    x: width * 0.36 - laptopW / 2,
-    y: floorY - laptopH - clamp(height * 0.18, 58, 114),
-    w: laptopW,
-    h: laptopH,
-  };
-  const outlet = {
-    x: clamp(width * 0.09, 18, 78),
-    y: clamp(height * 0.3, 78, 164),
-    w: 42,
-    h: 58,
-  };
-  const adapter = {
-    x: outlet.x + 58,
-    y: outlet.y + 10,
-    w: 58,
-    h: 38,
-  };
-  const personX = clamp(width * 0.78, laptop.x + laptop.w + 68, width - 42);
-  const personTop = floorY - clamp(height * 0.36, 122, 190);
-  const groundX = clamp(width * 0.54, laptop.x + 48, width - 82);
-  const hand = {
-    x: laptop.x + laptop.w + 12,
-    y: laptop.y - 12,
-  };
+  const topY = clamp(height * 0.23, 78, 128);
+  const junctionY = clamp(height * 0.46, 185, 250);
+  const groundY = height - clamp(height * 0.16, 72, 98);
+  const sourceX = clamp(width * 0.08, 34, 76);
+  const leakStartX = sourceX + clamp(width * 0.13, 46, 106);
+  const leakEndX = Math.max(leakStartX + 40, width * 0.39);
+  const caseX = Math.min(width - 92, Math.max(leakEndX + 82, width * 0.58));
+  const groundBranchX = Math.max(58, Math.min(caseX - 70, width * 0.35));
+  const bodyX = Math.min(width - 44, Math.max(caseX + 82, width * 0.78));
+  const busLeft = Math.min(groundBranchX, bodyX) - 58;
+  const busRight = Math.max(groundBranchX, bodyX) + 58;
 
-  const leakPath = [
-    { x: outlet.x + outlet.w, y: outlet.y + outlet.h / 2 },
-    { x: adapter.x, y: adapter.y + adapter.h / 2 },
-    { x: adapter.x + adapter.w, y: adapter.y + adapter.h / 2 },
-    { x: laptop.x + 8, y: laptop.y - 6 },
-  ];
-  const bodyPath = [
-    { x: laptop.x + laptop.w + 4, y: laptop.y - 10 },
-    { x: hand.x, y: hand.y },
-    { x: personX - 18, y: personTop + 60 },
-    { x: personX - 6, y: floorY - 12 },
-  ];
-  const groundPath = [
-    { x: laptop.x + laptop.w * 0.48, y: laptop.y + laptop.h + 8 },
-    { x: groundX, y: floorY - 36 },
-    { x: groundX, y: floorY - 6 },
-  ];
+  const source = { x: sourceX, y: topY };
+  const leakEntry = { x: leakStartX, y: topY };
+  const leakExit = { x: leakEndX, y: topY };
+  const caseLeft = { x: caseX - 70, y: topY };
+  const caseBottom = { x: caseX, y: topY + 38 };
+  const junction = { x: caseX, y: junctionY };
+  const groundTop = { x: groundBranchX, y: junctionY };
+  const bodyTop = { x: bodyX, y: junctionY };
+  const groundBottom = { x: groundBranchX, y: groundY - 38 };
+  const bodyBottom = { x: bodyX, y: groundY - 38 };
 
-  drawSimulationPath(ctx, leakPath, COLORS.lavender, 5, 0.65);
-  drawSimulationPath(ctx, bodyPath, riskColor, 7, 0.48 + bodyIntensity * 0.42);
-  drawSimulationPath(ctx, groundPath, COLORS.green, 6, 0.3 + groundIntensity * 0.6);
+  const leakPath = [source, leakEntry, leakExit, caseLeft, { x: caseX, y: topY }, caseBottom, junction];
+  const groundPath = [junction, groundTop, groundBottom, { x: groundBranchX, y: groundY }];
+  const bodyPath = [junction, bodyTop, bodyBottom, { x: bodyX, y: groundY }];
 
-  drawOutlet(ctx, outlet);
-  drawAdapter(ctx, adapter);
-  drawLaptop(ctx, laptop, riskColor);
-  drawPerson(ctx, personX, personTop, floorY, hand, riskColor);
-  drawGround(ctx, groundX, floorY);
+  drawCircuitWire(ctx, [{ x: sourceX - 18, y: topY }, source], "#26323a", 3);
+  drawCircuitWire(ctx, [source, leakEntry], "#26323a", 3);
+  drawCircuitWire(ctx, [leakExit, caseLeft], "#26323a", 3);
+  drawCircuitWire(ctx, [caseBottom, junction], "#26323a", 3);
+  drawCircuitWire(ctx, [junction, groundTop], "#26323a", 3);
+  drawCircuitWire(ctx, [junction, bodyTop], "#26323a", 3);
+  drawCircuitWire(ctx, [groundBottom, { x: groundBranchX, y: groundY }, { x: busLeft, y: groundY }], "#26323a", 3);
+  drawCircuitWire(ctx, [bodyBottom, { x: bodyX, y: groundY }, { x: busRight, y: groundY }], "#26323a", 3);
+  drawCircuitWire(ctx, [{ x: busLeft, y: groundY }, { x: busRight, y: groundY }], "#26323a", 3);
 
-  drawParticles(ctx, leakPath, COLORS.lavender, 5 + Math.round(leakIntensity * 8), time, 0.00018, 7);
-  drawParticles(ctx, bodyPath, riskColor, 3 + Math.round(bodyIntensity * 10), time, 0.00015 + bodyIntensity * 0.00012, 8);
-  if (groundIntensity > 0.015) {
-    drawParticles(ctx, groundPath, COLORS.green, 2 + Math.round(groundIntensity * 10), time, 0.00012 + groundIntensity * 0.0001, 7);
+  drawCircuitWire(ctx, leakPath, COLORS.lavender, 6 + leakIntensity * 4, 0.56);
+  drawCircuitWire(ctx, bodyPath, riskColor, 6 + bodyIntensity * 7, 0.62);
+  drawCircuitWire(ctx, groundPath, COLORS.green, 5 + groundIntensity * 6, 0.54);
+
+  drawVoltageSource(ctx, sourceX - 18, topY, state.v0);
+  drawResistorHorizontal(ctx, leakEntry.x, topY, leakExit.x - leakEntry.x, COLORS.blue);
+  drawCaseNode(ctx, caseX, topY, result.vTouch, riskColor);
+  drawResistorVertical(ctx, groundBranchX, junctionY + 16, groundY - junctionY - 70, COLORS.green);
+  drawResistorVertical(ctx, bodyX, junctionY + 16, groundY - junctionY - 70, riskColor);
+  drawGroundSymbol(ctx, groundBranchX, groundY + 8, COLORS.green);
+  drawGroundSymbol(ctx, bodyX, groundY + 8, "#6b7780");
+  drawCircuitNode(ctx, junction.x, junction.y);
+  drawCircuitNode(ctx, groundBranchX, groundY);
+  drawCircuitNode(ctx, bodyX, groundY);
+
+  drawFlowDots(ctx, leakPath, COLORS.lavender, 4 + Math.round(leakIntensity * 5), time, 0.00013, 5);
+  drawFlowDots(ctx, bodyPath, riskColor, 3 + Math.round(bodyIntensity * 8), time, 0.00014 + bodyIntensity * 0.0001, 6);
+  if (groundIntensity > 0.01) {
+    drawFlowDots(ctx, groundPath, COLORS.green, 2 + Math.round(groundIntensity * 7), time, 0.00011 + groundIntensity * 0.00008, 5);
   }
 
-  drawCanvasTag(ctx, `V0 ${state.v0.toFixed(0)}V`, outlet.x + 22, outlet.y - 18, COLORS.lavender);
-  drawCanvasTag(ctx, `외함 ${result.vTouch.toFixed(3)}V`, laptop.x + laptop.w / 2, laptop.y - 52, riskColor);
-  drawCanvasTag(ctx, `Ibody ${formatCurrent(result.currentMa)}`, personX - 4, personTop - 20, riskColor);
-  drawCanvasTag(ctx, `접지 ${result.groundShare.toFixed(1)}%`, groundX, floorY - 78, COLORS.green);
+  drawCircuitLabel(ctx, "누설 경로 Rleak", (leakEntry.x + leakExit.x) / 2, topY - 46, {
+    align: "center",
+    color: COLORS.blue,
+    value: formatOhm(state.rLeak),
+  });
+  drawCircuitLabel(ctx, "접지 저항 Rg", groundBranchX, junctionY + 18, {
+    align: "center",
+    color: COLORS.green,
+    value: formatOhm(state.rGround),
+  });
+  drawCircuitLabel(ctx, "인체 저항 Rbody", bodyX, junctionY + 18, {
+    align: "center",
+    color: riskColor,
+    value: formatOhm(state.rBody),
+  });
+  drawCurrentBadge(ctx, `Ibody ${formatCurrent(result.currentMa)}`, bodyX, groundY - 124, riskColor);
+  drawCurrentBadge(ctx, `Ig ${formatCurrent(result.groundCurrentMa)}`, groundBranchX, groundY - 124, COLORS.green);
+  drawCircuitLegend(ctx, width, height, riskColor);
 }
 
-function drawSimulationBackground(ctx, width, height, floorY) {
-  ctx.fillStyle = "#101414";
+function drawSimulationBackground(ctx, width, height) {
+  ctx.fillStyle = "#f7fbfc";
   ctx.fillRect(0, 0, width, height);
 
-  ctx.strokeStyle = "#2a3033";
+  ctx.strokeStyle = "#e5eef2";
   ctx.lineWidth = 1;
-  for (let x = 0; x < width; x += 18) {
+  for (let x = 0; x < width; x += 24) {
     ctx.beginPath();
     ctx.moveTo(x, 0);
     ctx.lineTo(x, height);
     ctx.stroke();
   }
-  for (let y = 0; y < height; y += 18) {
+  for (let y = 0; y < height; y += 24) {
     ctx.beginPath();
     ctx.moveTo(0, y);
     ctx.lineTo(width, y);
     ctx.stroke();
   }
+}
 
-  ctx.fillStyle = "#293034";
-  ctx.fillRect(0, floorY, width, height - floorY);
-  ctx.strokeStyle = COLORS.mint || "#aee2b1";
+function drawCircuitWire(ctx, points, color, width, alpha = 1) {
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  drawPolyline(ctx, points);
+  ctx.restore();
+}
+
+function drawVoltageSource(ctx, x, y, voltage) {
+  ctx.save();
+  ctx.strokeStyle = "#26323a";
+  ctx.fillStyle = "#ffffff";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.arc(x, y, 25, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = "#26323a";
+  ctx.font = "700 16px Apple SD Gothic Neo, Malgun Gothic, system-ui, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("V0", x, y - 3);
+  ctx.font = "700 12px Apple SD Gothic Neo, Malgun Gothic, system-ui, sans-serif";
+  ctx.fillStyle = COLORS.blue;
+  ctx.fillText(`${voltage.toFixed(0)} V`, x, y + 17);
+  ctx.restore();
+}
+
+function drawResistorHorizontal(ctx, x, y, width, color) {
+  const segment = width / 8;
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 4;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  for (let index = 1; index <= 7; index += 1) {
+    const nextX = x + segment * index;
+    const nextY = index % 2 ? y - 16 : y + 16;
+    ctx.lineTo(nextX, nextY);
+  }
+  ctx.lineTo(x + width, y);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawResistorVertical(ctx, x, y, height, color) {
+  const segment = height / 8;
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 4;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  for (let index = 1; index <= 7; index += 1) {
+    const nextX = index % 2 ? x - 16 : x + 16;
+    const nextY = y + segment * index;
+    ctx.lineTo(nextX, nextY);
+  }
+  ctx.lineTo(x, y + height);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawCaseNode(ctx, x, y, touchVoltage, accent) {
+  const box = { x: x - 74, y: y - 36, w: 148, h: 72 };
+  ctx.save();
+  ctx.fillStyle = "#ffffff";
+  ctx.strokeStyle = "#26323a";
+  ctx.lineWidth = 2;
+  drawRoundRect(ctx, box.x, box.y, box.w, box.h, 8);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = "#edf3f6";
+  drawRoundRect(ctx, box.x + 16, box.y + 12, box.w - 32, 28, 5);
+  ctx.fill();
+  ctx.strokeStyle = accent;
   ctx.lineWidth = 4;
   ctx.beginPath();
-  ctx.moveTo(0, floorY);
-  ctx.lineTo(width, floorY);
+  ctx.moveTo(box.x + 25, box.y + 52);
+  ctx.lineTo(box.x + box.w - 25, box.y + 52);
   ctx.stroke();
+
+  ctx.fillStyle = "#26323a";
+  ctx.font = "800 15px Apple SD Gothic Neo, Malgun Gothic, system-ui, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("노트북 외함", x, y - 8);
+  ctx.font = "800 13px Apple SD Gothic Neo, Malgun Gothic, system-ui, sans-serif";
+  ctx.fillStyle = accent;
+  ctx.fillText(`${touchVoltage.toFixed(3)} V`, x, y + 14);
+  ctx.restore();
+}
+
+function drawCircuitNode(ctx, x, y) {
+  ctx.save();
+  ctx.fillStyle = "#26323a";
+  ctx.beginPath();
+  ctx.arc(x, y, 6, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawGroundSymbol(ctx, x, y, color) {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 4;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(x - 24, y);
+  ctx.lineTo(x + 24, y);
+  ctx.moveTo(x - 16, y + 11);
+  ctx.lineTo(x + 16, y + 11);
+  ctx.moveTo(x - 8, y + 22);
+  ctx.lineTo(x + 8, y + 22);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawCircuitLabel(ctx, label, x, y, options = {}) {
+  const align = options.align || "left";
+  const value = options.value || "";
+  const color = options.color || "#26323a";
+  ctx.save();
+  ctx.font = "800 13px Apple SD Gothic Neo, Malgun Gothic, system-ui, sans-serif";
+  const labelWidth = ctx.measureText(label).width;
+  ctx.font = "700 12px Apple SD Gothic Neo, Malgun Gothic, system-ui, sans-serif";
+  const valueWidth = value ? ctx.measureText(value).width : 0;
+  const boxWidth = Math.max(labelWidth, valueWidth) + 18;
+  const boxHeight = value ? 42 : 26;
+  let boxX = x;
+  if (align === "center") {
+    boxX = x - boxWidth / 2;
+  } else if (align === "right") {
+    boxX = x - boxWidth;
+  }
+
+  ctx.fillStyle = "rgba(255, 255, 255, 0.92)";
+  ctx.strokeStyle = "rgba(38, 50, 58, 0.12)";
+  ctx.lineWidth = 1;
+  drawRoundRect(ctx, boxX, y - 14, boxWidth, boxHeight, 8);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.textAlign = align;
+  ctx.textBaseline = "middle";
+  ctx.font = "800 13px Apple SD Gothic Neo, Malgun Gothic, system-ui, sans-serif";
+  ctx.fillStyle = "#26323a";
+  ctx.fillText(label, x, y);
+  if (value) {
+    ctx.font = "700 12px Apple SD Gothic Neo, Malgun Gothic, system-ui, sans-serif";
+    ctx.fillStyle = color;
+    ctx.fillText(value, x, y + 18);
+  }
+  ctx.restore();
+}
+
+function drawCurrentBadge(ctx, text, x, y, color) {
+  ctx.save();
+  ctx.font = "800 13px Apple SD Gothic Neo, Malgun Gothic, system-ui, sans-serif";
+  const textWidth = ctx.measureText(text).width;
+  const width = textWidth + 24;
+  const left = x - width / 2;
+  ctx.fillStyle = "#ffffff";
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  drawRoundRect(ctx, left, y, width, 30, 15);
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(text, x, y + 15);
+  ctx.restore();
+}
+
+function drawCircuitLegend(ctx, width, height, bodyColor) {
+  const x = 18;
+  const y = height - 42;
+  const items = [
+    { color: COLORS.lavender, text: "누설 경로" },
+    { color: bodyColor, text: "인체 경로" },
+    { color: COLORS.green, text: "접지 경로" },
+  ];
+
+  ctx.save();
+  ctx.font = "700 12px Apple SD Gothic Neo, Malgun Gothic, system-ui, sans-serif";
+  ctx.textBaseline = "middle";
+  let cursor = x;
+  items.forEach((item) => {
+    ctx.fillStyle = item.color;
+    ctx.beginPath();
+    ctx.arc(cursor + 6, y, 6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#52646b";
+    ctx.textAlign = "left";
+    ctx.fillText(item.text, cursor + 18, y);
+    cursor += ctx.measureText(item.text).width + 54;
+  });
+  ctx.restore();
+}
+
+function drawFlowDots(ctx, points, color, count, time, speed, radius) {
+  for (let index = 0; index < count; index += 1) {
+    const progress = (time * speed + index / count) % 1;
+    const point = pointOnPath(points, progress);
+    ctx.save();
+    ctx.fillStyle = color;
+    ctx.globalAlpha = 0.9;
+    ctx.beginPath();
+    ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+function drawRoundRect(ctx, x, y, width, height, radius) {
+  const r = Math.min(radius, width / 2, height / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + width - r, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + r);
+  ctx.lineTo(x + width, y + height - r);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+  ctx.lineTo(x + r, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
 }
 
 function drawSimulationPath(ctx, points, color, width, alpha) {
