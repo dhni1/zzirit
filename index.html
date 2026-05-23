@@ -23,7 +23,33 @@
           />
           <div class="brand-copy">
             <p class="eyebrow">충전 중 금속 노트북의 접촉 전류</p>
-            <h1>접촉전류 계산기</h1>
+            <div class="title-row">
+              <h1>접촉전류 계산기</h1>
+              <div class="tab-list" role="tablist" aria-label="결과 보기">
+                <button
+                  id="tabGraphs"
+                  class="tab-button is-active"
+                  type="button"
+                  role="tab"
+                  aria-selected="true"
+                  aria-controls="graphsPanel"
+                  data-tab="graphs"
+                >
+                  그래프
+                </button>
+                <button
+                  id="tabSimulation"
+                  class="tab-button"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="simulationPanel"
+                  data-tab="simulation"
+                >
+                  시뮬레이션
+                </button>
+              </div>
+            </div>
           </div>
         </div>
         <div class="main-readout" aria-live="polite">
@@ -107,38 +133,99 @@
           </p>
         </aside>
 
-        <section class="graph-board" aria-label="조건별 접촉전류 그래프">
-          <article class="graph-card">
-            <header>
-              <h2>V0 변화</h2>
-              <span id="v0GraphValue">-</span>
-            </header>
-            <canvas id="graphV0"></canvas>
-          </article>
+        <section class="results-area">
+          <section
+            id="graphsPanel"
+            class="tab-panel is-active"
+            role="tabpanel"
+            aria-labelledby="tabGraphs"
+            data-panel="graphs"
+          >
+            <div class="graph-board" aria-label="조건별 접촉전류 그래프">
+              <article class="graph-card">
+                <header>
+                  <h2>V0 변화</h2>
+                  <span id="v0GraphValue">-</span>
+                </header>
+                <canvas id="graphV0"></canvas>
+              </article>
 
-          <article class="graph-card">
-            <header>
-              <h2>Rleak 변화</h2>
-              <span id="rLeakGraphValue">-</span>
-            </header>
-            <canvas id="graphRLeak"></canvas>
-          </article>
+              <article class="graph-card">
+                <header>
+                  <h2>Rleak 변화</h2>
+                  <span id="rLeakGraphValue">-</span>
+                </header>
+                <canvas id="graphRLeak"></canvas>
+              </article>
 
-          <article class="graph-card">
-            <header>
-              <h2>Rbody 변화</h2>
-              <span id="rBodyGraphValue">-</span>
-            </header>
-            <canvas id="graphRBody"></canvas>
-          </article>
+              <article class="graph-card">
+                <header>
+                  <h2>Rbody 변화</h2>
+                  <span id="rBodyGraphValue">-</span>
+                </header>
+                <canvas id="graphRBody"></canvas>
+              </article>
 
-          <article class="graph-card">
-            <header>
-              <h2>Rg 변화</h2>
-              <span id="rGroundGraphValue">-</span>
-            </header>
-            <canvas id="graphRGround"></canvas>
-          </article>
+              <article class="graph-card">
+                <header>
+                  <h2>Rg 변화</h2>
+                  <span id="rGroundGraphValue">-</span>
+                </header>
+                <canvas id="graphRGround"></canvas>
+              </article>
+            </div>
+          </section>
+
+          <section
+            id="simulationPanel"
+            class="tab-panel"
+            role="tabpanel"
+            aria-labelledby="tabSimulation"
+            data-panel="simulation"
+            hidden
+          >
+            <article class="simulation-console">
+              <header class="simulation-header">
+                <div>
+                  <p class="simulation-kicker">실시간 회로 모델</p>
+                  <h2>접촉 전류 흐름</h2>
+                </div>
+                <span id="simRiskBadge" class="sim-risk-badge">계산 중</span>
+              </header>
+
+              <div class="simulation-grid">
+                <canvas id="simulationCanvas" aria-label="노트북 접촉 전류 경로 시뮬레이션"></canvas>
+
+                <div class="simulation-readouts" aria-label="시뮬레이션 계기판">
+                  <div class="sim-metric">
+                    <span>외함 전위</span>
+                    <strong id="simTouchVoltage">0.000 V</strong>
+                    <div class="sim-bar" aria-hidden="true"><i id="simVoltageBar"></i></div>
+                  </div>
+                  <div class="sim-metric">
+                    <span>인체 경로</span>
+                    <strong id="simBodyCurrent">0.000 mA</strong>
+                    <div class="sim-bar is-body" aria-hidden="true"><i id="simBodyBar"></i></div>
+                  </div>
+                  <div class="sim-metric">
+                    <span>접지 우회</span>
+                    <strong id="simGroundCurrent">0.000 mA</strong>
+                    <div class="sim-bar is-ground" aria-hidden="true"><i id="simGroundBar"></i></div>
+                  </div>
+                  <div class="sim-metric">
+                    <span>누설 총량</span>
+                    <strong id="simLeakCurrent">0.000 mA</strong>
+                    <div class="sim-bar is-leak" aria-hidden="true"><i id="simLeakBar"></i></div>
+                  </div>
+                  <div class="sim-metric is-wide">
+                    <span>인체 부담</span>
+                    <strong id="simBodyShare">0.0%</strong>
+                    <div class="sim-bar is-share" aria-hidden="true"><i id="simShareBar"></i></div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </section>
         </section>
       </section>
     </main>

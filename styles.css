@@ -58,7 +58,8 @@ input {
 .brand,
 .main-readout,
 .control-panel,
-.graph-card {
+.graph-card,
+.simulation-console {
   border: var(--pixel) solid var(--line);
   background: var(--panel);
   box-shadow: 8px 8px 0 var(--shadow);
@@ -83,6 +84,13 @@ input {
 
 .brand-copy {
   min-width: 0;
+}
+
+.title-row {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .eyebrow {
@@ -137,6 +145,45 @@ h1 {
   grid-template-columns: 360px minmax(0, 1fr);
   gap: 16px;
   align-items: start;
+}
+
+.results-area {
+  min-width: 0;
+}
+
+.tab-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(120px, 1fr));
+  gap: 8px;
+  flex: 0 1 296px;
+  width: min(296px, 100%);
+}
+
+.tab-button {
+  min-height: 38px;
+  border: 4px solid var(--line);
+  border-radius: 0;
+  background: #fffef6;
+  color: var(--ink);
+  box-shadow: 3px 3px 0 var(--shadow);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.tab-button:hover,
+.tab-button:focus-visible {
+  background: var(--lavender);
+}
+
+.tab-button.is-active {
+  background: var(--green);
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 var(--shadow);
+}
+
+.tab-panel[hidden] {
+  display: none;
 }
 
 .control-panel {
@@ -347,10 +394,129 @@ input[type="range"]::-moz-range-thumb {
   image-rendering: pixelated;
 }
 
+.simulation-console {
+  min-width: 0;
+  padding: 14px;
+  background: #fffdf1;
+}
+
+.simulation-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.simulation-header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.simulation-kicker {
+  margin: 0 0 4px;
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.sim-risk-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  border: 3px solid var(--line);
+  padding: 5px 9px;
+  background: var(--green);
+  color: #101414;
+  font-size: 13px;
+  font-weight: 900;
+  box-shadow: 3px 3px 0 var(--shadow);
+}
+
+.simulation-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 14px;
+  align-items: stretch;
+}
+
+#simulationCanvas {
+  display: block;
+  width: 100%;
+  height: 548px;
+  border: 4px solid var(--line);
+  background: #101414;
+  image-rendering: pixelated;
+}
+
+.simulation-readouts {
+  display: grid;
+  gap: 10px;
+  align-content: stretch;
+}
+
+.sim-metric {
+  display: grid;
+  align-content: center;
+  min-height: 92px;
+  padding: 11px;
+  border: 4px solid var(--line);
+  background: #fff9e9;
+  box-shadow: 4px 4px 0 var(--shadow);
+}
+
+.sim-metric span {
+  color: #4a5d62;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.sim-metric strong {
+  display: block;
+  margin: 5px 0 8px;
+  font-size: 20px;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+
+.sim-bar {
+  width: 100%;
+  height: 14px;
+  border: 3px solid var(--line);
+  background: #101414;
+  overflow: hidden;
+}
+
+.sim-bar i {
+  display: block;
+  width: 0%;
+  height: 100%;
+  background: var(--yellow);
+  transition: width 140ms linear, background-color 140ms linear;
+}
+
+.sim-bar.is-body i {
+  background: var(--orange);
+}
+
+.sim-bar.is-ground i {
+  background: var(--green);
+}
+
+.sim-bar.is-leak i {
+  background: var(--lavender);
+}
+
+.sim-bar.is-share i {
+  background: var(--red);
+}
+
 @media (max-width: 1080px) {
   .topbar,
   .workspace,
-  .graph-board {
+  .graph-board,
+  .simulation-grid {
     grid-template-columns: 1fr;
   }
 
@@ -383,6 +549,14 @@ input[type="range"]::-moz-range-thumb {
     font-size: 22px;
   }
 
+  .title-row {
+    gap: 8px;
+  }
+
+  .tab-list {
+    width: 100%;
+  }
+
   .quick-row {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -391,10 +565,34 @@ input[type="range"]::-moz-range-thumb {
     height: 220px;
   }
 
+  #simulationCanvas {
+    height: 430px;
+  }
+
+  .simulation-readouts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sim-metric.is-wide {
+    grid-column: 1 / -1;
+  }
+
   .brand,
   .main-readout,
   .control-panel,
-  .graph-card {
+  .graph-card,
+  .simulation-console {
     box-shadow: 5px 5px 0 var(--shadow);
+  }
+}
+
+@media (max-width: 460px) {
+  .tab-list,
+  .simulation-readouts {
+    grid-template-columns: 1fr;
+  }
+
+  #simulationCanvas {
+    height: 360px;
   }
 }
