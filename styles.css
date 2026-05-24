@@ -144,7 +144,7 @@ h1 {
   display: grid;
   grid-template-columns: 360px minmax(0, 1fr);
   gap: 16px;
-  align-items: start;
+  align-items: stretch;
 }
 
 .results-area {
@@ -189,6 +189,8 @@ h1 {
 .control-panel {
   position: sticky;
   top: 18px;
+  display: flex;
+  flex-direction: column;
   padding: 16px;
 }
 
@@ -302,6 +304,7 @@ input[type="range"]::-moz-range-thumb {
 .meter-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  margin-bottom: 16px;
   border: 4px solid var(--line);
   background: #101414;
   color: white;
@@ -339,7 +342,7 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .safety-note {
-  margin: 16px 0 0;
+  margin: auto 0 0;
   padding: 12px;
   border: 3px solid var(--line);
   background: #ffe3da;
